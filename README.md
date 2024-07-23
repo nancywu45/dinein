@@ -19,6 +19,7 @@ Your Meal Planner Pal
 * Tailwind CSS
 * Shadcn
 * C#, .NET Framework
+* pnpm 
 
 ## Reflection
 

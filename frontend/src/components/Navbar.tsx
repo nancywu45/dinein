@@ -17,9 +17,9 @@ const Navbar = () => {
           <span><Image src={fridge.src} alt="fridge-icon" width={32} height={32} /></span><span className="text-white pl-2">Kitchen</span>
         </Link>
       </div>
-      <div>
+      <div className="ml-28">
         <Link href="/">
-          <div className="ml-28 avatar rounded-full min-h-12 min-w-12 bg-gray-100"></div>
+          <div className="avatar rounded-full min-h-12 min-w-12 bg-gray-100"></div>
         </Link>
       </div>
     </nav>

@@ -4,8 +4,7 @@ Your Meal Planner Pal
 
 (WIP) Check out the demo here 
 
-## Introduction
-
+[screenshots]
 
 
 ## Features
@@ -18,9 +17,6 @@ Your Meal Planner Pal
 * Typescript
 * Tailwind CSS
 * Shadcn
-* C#, .NET Framework
+* Lucide
+* Express/Node
 * pnpm 
-
-## Reflection
-
-* Something you about the project you are very proud of

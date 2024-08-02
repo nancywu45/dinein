@@ -9,8 +9,7 @@ Your Meal Planner Pal
 
 ## Features
 
-* Basic and advanced
-* MVP Future implementation
+* Kitchen
 
 ## Technologies
 * Next.js
@@ -18,5 +17,7 @@ Your Meal Planner Pal
 * Tailwind CSS
 * Shadcn
 * Lucide
-* Express/Node
+* Node.js
+* Express
 * pnpm 
+* Supabase

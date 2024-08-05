@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 
 export default function Home() {
   return (
-    <main className="bg-background-landing flex min-h-screen flex-col items-center justify-center p-24">
+    <main className="bg-background-landing flex min-h-screen flex-col items-center justify-center">
       {/* <MaxWidthWrapper> */}
         <div className="flex flex-col">
           <Image

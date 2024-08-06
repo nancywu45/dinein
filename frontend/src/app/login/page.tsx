@@ -6,6 +6,7 @@ import { supabase } from "../../lib/helper/supabaseClient";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper"
 import dineInLogo from "../../../public/dinein-logo.png"
 import googleLogo from "../../../public/google_icon.svg"
+import Link from "next/link";
 
 export default function Login() {
 
@@ -46,15 +47,15 @@ export default function Login() {
           height={40}
           priority
         />
-        <h2 className="font-semibold text-2xl text-left">Sign in</h2>
+        <h2 className="font-bold text-2xl pb-6">Sign in</h2>
         <form action="POST" className="flex flex-col">
           <label htmlFor="">Your email</label>
-          <input type="text" />
-          <label htmlFor="">Password</label>
-          <input type="password" />
+          <input className="bg-transparent border-b border-b-primary focus:border-primary" type="text" />
+          <label className="pt-4" htmlFor="">Password</label>
+          <input className="bg-transparent border-b border-b-primary active:border-primary" type="password" />
         </form>
-        <button onClick={loginDefault}>Login</button>
-        <p>Or sign in with</p>
+        <button className="py-2 px-10 m-6 bg-primary text-white rounded-full" onClick={loginDefault}>Sign in</button>
+        <p className="pb-4">Or sign in with</p>
         <button onClick={loginWithGoogle}>
           <Image 
             className=""
@@ -65,8 +66,10 @@ export default function Login() {
             priority
           />
         </button>
-        <p>Don't have an account?</p>
-        <button>Sign up</button>
+        <p className="pt-12">
+          Don't have an account?&nbsp;
+          <Link href="/signup" className="font-medium underline underline-offset-4">Sign up</Link>
+        </p>
       </main>
     </MaxWidthWrapper>
   )

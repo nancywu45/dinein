@@ -29,10 +29,10 @@ const config = {
         foreground: "hsl(var(--foreground))",
         primary: "hsl(var(--primary))",
         secondary: "hsl(var(--secondary))",
-        // destructive: {
-        //   DEFAULT: "hsl(var(--destructive))",
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
         //   foreground: "hsl(var(--destructive-foreground))",
-        // },
+        },
         // muted: {
         //   DEFAULT: "hsl(var(--muted))",
         //   foreground: "hsl(var(--muted-foreground))",

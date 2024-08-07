@@ -7,8 +7,12 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper"
 import dineInLogo from "../../../public/dinein-logo.png"
 import googleLogo from "../../../public/google_icon.svg"
 import Link from "next/link";
+import { useFormState } from "react-dom";
+import { printTextAction } from "./actions";
 
 export default function SignUp() {
+
+  const [state, formAction] = useFormState(printTextAction, { errors: {}})
 
   const signUpDefault = async() => {
     const { data, error } = await supabase.auth.signUp({
@@ -16,7 +20,7 @@ export default function SignUp() {
       password: 'example-password',
       options: {
         data: {
-          first_name: ''
+          name: ''
         }
       }
     })
@@ -53,26 +57,29 @@ export default function SignUp() {
           priority
         />
         <h2 className="font-bold text-2xl text-left pb-6">Sign up</h2>
-        <form action="POST" className="flex flex-col">
-          <label htmlFor="">Your email</label>
-          <input className="bg-transparent border-b border-b-primary focus:border-primary" type="text" />
-          <label className="pt-4" htmlFor="">Your name</label>
-          <input className="bg-transparent border-b border-b-primary focus:border-primary" type="text" />
-          <label className="pt-4" htmlFor="">Password</label>
-          <input className="bg-transparent border-b border-b-primary focus:border-primary" type="password" />
+        <form action={formAction} className="flex flex-col">
+          <label htmlFor="email">Your email</label>
+          <input name="email" type="text" className="bg-transparent border-b border-b-primary focus:border-primary" />
+          <span className="text-destructive">{state.errors.email}</span>
+          <label className="pt-4" htmlFor="name">Your name</label>
+          <input name="name" type="text" className="bg-transparent border-b border-b-primary focus:border-primary" />
+          <span className="text-destructive">{state.errors.name}</span>
+          <label className="pt-4" htmlFor="password">Password</label>
+          <input name="password" type="password" className="bg-transparent border-b border-b-primary focus:border-primary" />
+          <span className="text-destructive">{state.errors.password}</span>
+          <button className="py-2 px-10 m-6 bg-primary text-white rounded-full" onClick={signUpDefault}>Sign up</button>
         </form>
-        <button className="py-2 px-10 m-6 bg-primary text-white rounded-full" onClick={signUpDefault}>Sign up</button>
-        <p className="pb-4">Or sign up with</p>
-        <button onClick={signUpWithGoogle}>
-          <Image 
-            className=""
-            src={googleLogo.src} 
-            alt="Google Logo"
-            width={36}
-            height={36}
-            priority
-          />
-        </button>
+          <p className="pb-4">Or sign up with</p>
+          <button onClick={signUpWithGoogle}>
+            <Image 
+              className=""
+              src={googleLogo.src} 
+              alt="Google Logo"
+              width={36}
+              height={36}
+              priority
+            />
+          </button>
         <p className="pt-12">
           Already have an account?&nbsp;
           <Link href="/login" className="font-medium underline underline-offset-4">Sign in</Link>

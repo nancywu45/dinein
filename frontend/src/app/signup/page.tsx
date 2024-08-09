@@ -1,20 +1,44 @@
 "use client"
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from 'zod';
+
 import { supabase } from "../../lib/helper/supabaseClient";
+
 import MaxWidthWrapper from "@/components/MaxWidthWrapper"
+
 import dineInLogo from "../../../public/dinein-logo.png"
 import googleLogo from "../../../public/google_icon.svg"
-import Link from "next/link";
-import { useFormState } from "react-dom";
-import { printTextAction } from "./actions";
+
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+
+const formSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(3),
+  passwordConfirm: z.string()
+}).refine((data) => {
+  return data.password === data.passwordConfirm
+}, {
+  message: "Passwords do not match",
+  path: ["passwordConfirm"]
+})
 
 export default function SignUp() {
 
-  const [state, formAction] = useFormState(printTextAction, { errors: {}})
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: ""
+    }
+  })
 
-  const signUpDefault = async() => {
+  const signUpDefault = async (values: z.infer<typeof formSchema>) => {
     const { data, error } = await supabase.auth.signUp({
       email: 'example@email.com',
       password: 'example-password',
@@ -57,18 +81,50 @@ export default function SignUp() {
           priority
         />
         <h2 className="font-bold text-2xl text-left pb-6">Sign up</h2>
-        <form action={formAction} className="flex flex-col">
-          <label htmlFor="email">Your email</label>
-          <input name="email" type="text" className="bg-transparent border-b border-b-primary focus:border-primary" />
-          <span className="text-destructive">{state.errors.email}</span>
-          <label className="pt-4" htmlFor="name">Your name</label>
-          <input name="name" type="text" className="bg-transparent border-b border-b-primary focus:border-primary" />
-          <span className="text-destructive">{state.errors.name}</span>
-          <label className="pt-4" htmlFor="password">Password</label>
-          <input name="password" type="password" className="bg-transparent border-b border-b-primary focus:border-primary" />
-          <span className="text-destructive">{state.errors.password}</span>
-          <button className="py-2 px-10 m-6 bg-primary text-white rounded-full" onClick={signUpDefault}>Sign up</button>
-        </form>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(signUpDefault)} className="flex flex-col max-w-full gap-4">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => {
+                return <FormItem>
+                  <FormLabel>Your email</FormLabel>
+                  <FormControl className="bg-transparent border-b border-b-primary rounded-none active:rounded-lg focus:rounded-lg">
+                    <Input type="email" {...field}/>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => {
+                return <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl className="bg-transparent border-b border-b-primary rounded-none active:rounded-lg focus:rounded-lg">
+                    <Input type="password" {...field}/>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="passwordConfirm"
+              render={({ field }) => {
+                return <FormItem>
+                  <FormLabel>Confirm password</FormLabel>
+                  <FormControl className="bg-transparent border-b border-b-primary rounded-none active:rounded-lg focus:rounded-lg">
+                    <Input type="password" {...field}/>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              }}
+            />
+            <Button type="submit" className="text-white m-4 rounded-full hover:text-primary hover:border hover:border-primary">Sign up</Button>
+          </form>
+        </Form>
           <p className="pb-4">Or sign up with</p>
           <button onClick={signUpWithGoogle}>
             <Image 

@@ -20,7 +20,8 @@ import { Button } from "@/components/ui/button"
 
 const formSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(3),
+  name: z.string().min(1),
+  password: z.string().min(6),
   passwordConfirm: z.string()
 }).refine((data) => {
   return data.password === data.passwordConfirm
@@ -40,14 +41,16 @@ export default function SignUp() {
 
   const signUpDefault = async (values: z.infer<typeof formSchema>) => {
     const { data, error } = await supabase.auth.signUp({
-      email: 'example@email.com',
-      password: 'example-password',
+      email: values.email,
+      password: values.password,
       options: {
         data: {
-          name: ''
+          name: values.name
         }
       }
     })
+
+    console.log(data)
   }
 
   const signUpWithGoogle = async() => {
@@ -71,7 +74,7 @@ export default function SignUp() {
 
   return (
     <MaxWidthWrapper>
-      <main className="flex min-h-screen flex-col items-center justify-center">
+      <main className="flex min-h-screen flex-col justify-center">
         <Image 
           className="mx-auto pb-16"
           src={dineInLogo.src} 
@@ -90,7 +93,20 @@ export default function SignUp() {
                 return <FormItem>
                   <FormLabel>Your email</FormLabel>
                   <FormControl className="bg-transparent border-b border-b-primary rounded-none active:rounded-lg focus:rounded-lg">
-                    <Input type="email" {...field}/>
+                    <Input type="text" {...field}/>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => {
+                return <FormItem>
+                  <FormLabel>Your name</FormLabel>
+                  <FormControl className="bg-transparent border-b border-b-primary rounded-none active:rounded-lg focus:rounded-lg">
+                    <Input type="text" {...field}/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -122,13 +138,15 @@ export default function SignUp() {
                 </FormItem>
               }}
             />
-            <Button type="submit" className="text-white m-4 rounded-full hover:text-primary hover:border hover:border-primary">Sign up</Button>
+            <div className="text-center">
+              <Button type="submit" className="text-white m-4 w-64 items-center rounded-full hover:text-primary hover:border hover:border-primary">Sign up</Button>
+            </div>
           </form>
         </Form>
-          <p className="pb-4">Or sign up with</p>
-          <button onClick={signUpWithGoogle}>
+          <p className="pb-4 text-center">Or sign up with</p>
+          <button className="w-full" onClick={signUpWithGoogle}>
             <Image 
-              className=""
+              className="mx-auto"
               src={googleLogo.src} 
               alt="Google Logo"
               width={36}
@@ -136,7 +154,7 @@ export default function SignUp() {
               priority
             />
           </button>
-        <p className="pt-12">
+        <p className="pt-12 text-center">
           Already have an account?&nbsp;
           <Link href="/login" className="font-medium underline underline-offset-4">Sign in</Link>
         </p>

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
@@ -20,8 +20,8 @@ import { Button } from "@/components/ui/button"
 
 const formSchema = z.object({
   email: z.string().email(),
-  name: z.string().min(1),
-  password: z.string().min(6),
+  name: z.string().min(1, { message: "Name must contain at least 1 character"}).max(50, { message: "Name cannot contain more than 50 characters"}),
+  password: z.string().min(6, { message: "Password must contain at least 6 characters"}).max(100, { message: "Password cannot contain more than 100 characters"}),
   passwordConfirm: z.string()
 }).refine((data) => {
   return data.password === data.passwordConfirm
@@ -32,15 +32,27 @@ const formSchema = z.object({
 
 export default function SignUp() {
 
+  const [formData, setFormData] = useState<{
+    email: string,
+    name: string,
+    password: string,
+  }>({
+    email: '',
+    name: '',
+    password: '',
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: ""
+      email: "",
+      name: "",
+      password: ""
     }
   })
 
   const signUpDefault = async (values: z.infer<typeof formSchema>) => {
-    const { data, error } = await supabase.auth.signUp({
+    const { data: dataUser, error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
       options: {
@@ -50,17 +62,26 @@ export default function SignUp() {
       }
     })
 
-    console.log(data)
+    if (dataUser) console.log(dataUser)
+    if (error) console.log(error)
   }
 
   const signUpWithGoogle = async() => {
-    const { data, error } = await supabase.auth.signInWithSSO({
+    const { data: dataUser, error } = await supabase.auth.signInWithSSO({
       domain: "google.com"
     })
 
-    if (data?.url) {
-      window.location.href = data.url
+    if (dataUser?.url) {
+      window.location.href = dataUser.url
     }
+  }
+
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setFormData((prev: any) => ({
+      ...prev,
+      [name]: value,
+    }))
   }
 
   supabase.auth.onAuthStateChange((event, session) => {
@@ -93,7 +114,7 @@ export default function SignUp() {
                 return <FormItem>
                   <FormLabel>Your email</FormLabel>
                   <FormControl className="bg-transparent border-b border-b-primary rounded-none active:rounded-lg focus:rounded-lg">
-                    <Input type="text" {...field}/>
+                    <Input type="text" {...field} value={formData?.email} onChange={handleChange} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -106,7 +127,7 @@ export default function SignUp() {
                 return <FormItem>
                   <FormLabel>Your name</FormLabel>
                   <FormControl className="bg-transparent border-b border-b-primary rounded-none active:rounded-lg focus:rounded-lg">
-                    <Input type="text" {...field}/>
+                    <Input type="text" {...field} value={formData?.name} onChange={handleChange}/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -119,7 +140,7 @@ export default function SignUp() {
                 return <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl className="bg-transparent border-b border-b-primary rounded-none active:rounded-lg focus:rounded-lg">
-                    <Input type="password" {...field}/>
+                    <Input type="password" {...field} value={formData?.password} onChange={handleChange}/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

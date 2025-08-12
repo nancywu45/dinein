@@ -1,6 +1,11 @@
 {
   "name": "backend",
   "version": "1.0.0",
+  "pnpm": {
+    "overrides": {
+      "brace-expansion": "2.0.2"
+    }
+  },
   "description": "",
   "main": "index.js",
   "type": "module",
